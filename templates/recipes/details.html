@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Recipe Description{% endblock %}
+
+{% block content %}
+
+<div class="jumbotron pt-4" style=opacity: 0.9">
+    <div class="container">
+        <div class="row mb-1">
+
+        <div class="col-sm-12 col-md-6 text-center">
+            <h1 class="display-4">{{ recipe.title }}</h1>
+            <hr class="my-2">
+            <p class="lead my-1">Serves: {{recipes.servings}}</p>
+            <p class="lead my-1">Reday In: {{ recipe.readyInMinutes }}Minutes</p>
+        </div>
+
+        <div class="col-sm-12 col-md-6 mr-0">
+            <img src={{ recipe.img }} class="img img-fluid img-thumbnail" alt="Image of {{ recipe.title }}">
+            <br>
+            <span class="text-center">
+                <small class="small"><a href="{{ recipe.sourceUrl }}" class="text-muted mx-auto" target="_blank">Origin of {{ recipe.sourceName }}</a></small>
+                <form id="favorite-form" class="favorite-form d-inline">
+                    {% if recipe in g.user.recipes %}
+                    <button data-id="{{ recipe.id }}" class="btn btn-lg"><span><i class="heart fa fa-heart-o"></i></span></button>
+                    {% else %}
+                    <button data-id="{{ recipe.id }}" class="btn btn-lg"><span><i class="heart fa fa-heart-o"></i></span></button>
+                    {% endif %}
+                </form>
+            </span>
+            
+            <!-- diet -->
+            {% if recipe.glutenfree %}
+            <br>
+            <small class="text-primary">Gluten Free!</small>
+            {% endif %}
+
+            {% if recipe.dairyFree %}
+            <br>
+            <small class="text-primary">Dairy Free</small>
+            {% endif %}
+
+            {% if recipe.sustainable %}
+            <br>
+            <small class="text-primary">Sustainable</small>
+            {% endif %}
+
+            {% if recipe.vegetarian %}
+            <br>
+            <small class="text-primary">Vegetarian</small>
+            {% endif %}
+
+            {% if recipe.ketogenic %}
+            <br>
+            <small class="text-primary">Vegan</small>
+            {% endif %}
+    </div>
+</div>
+
+<div class="row p-0 m-0">
+    <div class="col-sm-12 col-md-5 mx-1 mb-2 text-center">
+        <h5 class="instructions">instructions</h5>
+        {% if recipe.steps %}
+        <ul class="list-group list-group-flush text-center">
+            {% for step in recipe.steps %}
+            <li class="list-group-item">{{ step.show_step() }}</li>
+            {% endfor %}
+        </ul>
+        {% elif recipe.instructions %}
+        <p class="instructions">{{ recipe.instructions.replace('.', '. \n \n') }}</p>
+            {% else %}
+            <p class="">Oops!
+            </p>
+            <p class="">We can not find instructions for this recipe!
+            </p>
+            {% endif %}
+    </div>
+
+    <div class="col-sm-12 col-md-4 col-lg mx-1 text-center">
+        <h5 class="ingredients">Ingredients</h5>
+        {% if recipe.ingredients %}
+
+        {% for ingredient in recipe.ingredients %}
+        <p class="ingredients" data-id="{{ ingredient.id }}">{{ ingredient.original }}</p>
+        {% endfor %}
+        <button id='add-ingredients' data-id="{{ recipe.id }}" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Add to Shopping List</button>
+
+                {% elif recipe.extendedIngredients %}
+               
+                {% for ingredient in recipe.extendedIngredients %}
+                <p class="ingredient" data-id="{{ ingredient.id }}">{{ ingredient.originalString }}</p>
+                {% endfor %}
+
+                <button id='add-ingredients' data-id="{{ recipe.id }}" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Add to Shopping List</button>
+                {% else %}
+                <p class="">Oops!</p>
+                <p class="">We can not find the ingredients for this recipe!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

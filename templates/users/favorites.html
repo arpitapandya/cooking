@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Favorites{% endblock %}
+
+{% block content %}
+
+<h1 class="display-2 my-3 text-center">Favorites</h1>
+<hr>
+
+{% if g.user.recipes %}
+
+<div class="d-flex flex-wrap justify-content-around" id="recipe-container">
+
+{% for recipe in g.user.recipes %}
+
+<div class="card" style="width: 18rem;">
+    <a href="{{ url_for('my_recipes', id=recipe.id) }}"
+  <img class="card-img-top" src="{{recipe.image}} class="card-img-top img-fluid" alt="image of {{recipe.title}}">
+  
+  <div class="card-body">
+    <h4 class="card-title d-inline">{{ recipe.title}}</h4>
+
+    <form id="favoritelist-form" class="favoritelist-form d-inline">
+        {% if recipe.id in id_list %}
+        <button data-id="{{ recipe.id }}" class=btn btn-lg><span><i class="heart fa fa-heart-o"></i></span></button>
+        {% else %}
+        <button data-id="{{ recipe.id }}" class=btn btn-lg><span><i class="heart fa fa-heart-o"></i></span></button>
+        {% endif %}
+    </form>
+
+    <p class="lead">Servings: {{ recipe.servings }}</p>
+    <p class="lead  mb-0">Recipe Ready In: {{recipe.readyInMinutes }}minutes</a>
+  <br>
+  </div>
+  </a>
+</div>
+
+{% endfor %}
+
+{% else %}
+<p class="card-text">Don't forget to add the recipe to enjoy it!.</p>
+{% endif %}
+
+{% endblock %}
