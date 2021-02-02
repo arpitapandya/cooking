@@ -4,7 +4,9 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property=og:image" content="https://images.unsplash.com/photo-1552590635-e94502090862?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MjU5fHxtZWFsfGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1552590635-e94502090862?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MjU5fHxtZWFsfGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" />
+  <meta name="description" content="Let's cook something new!">
+  
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   
@@ -14,43 +16,42 @@
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-    <title>{% block title %} Food Planner {% endblock %}</title>
+    <title>{%block title %}Cookingclub{% endblock %}</title>
     <link rel="stylesheet" href="/static/styles/style.css">
   </head>
 
-  <body class="{% block body_class %}{% endblock %}">
+  <body>
 
     <!--Navbar-->
-    <nav class="navbar navbar-expand">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
       <div class="container-fluid">
          <div class="navbar-header">
-            <a class="navbar-brand" href="{{ url_for('home_page') }}">Meal Planner</a>
-                <span></span>
+            <a class="navbar-brand" href="{{ url_for('home_page') }}">CookingClub</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
           </button>
           </div>
       </div>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      
+    <div class="collapse navbar-collapse align-items-top" id="navbarSupportedContent">
+      <div class="navbar-nav mr-auto align-items-center">
       {% if g.user %}
-      <li class="navbar-nav me-auto mb-2 mb-lg-0">
-            <a class="nav-link" href="{{ url_for('view_saved_recipes') }}">My Recipes</a>
-      </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('view_saved_recipes') }}">My Recipes</a>
+        </li>
+      </div>
     
+    <!--Diet & cuisine search form-->
   <form data-id="{{ g.user.id }}" class="form-inline my-2 justify-content-right flex-nowrap mx-auto" id="search-form">
-
-      <!--Diet-->
     <div class="input-group">
           <select class="custom-select mr-1 p-1 rounded" id="diet">
-            <option value="" selected> <span class="text-muted">Diets</span> </option>
+            <option value="" selected> <span class="text-muted">Diets</span></option>
             {% for diet in diets %}
             <option value="{{diet}}">{{ diet.capitalize() }}</option>
             {% endfor %}
           </select>
      </div>
-
+    <!--cuisine-->
     <div class="input-group" id="cuisine-container">  
         <select class="custom-select mr-1 p-1 rounded" id="cuisine" data-container="body">
           <option value="" selected> <span class="text-muted">Cuisines</span> </option>
@@ -60,23 +61,25 @@
          </select>
     </div>
 
-      <input data-id="{{ g.user.id }}" class="form-control mr-lg-2 rounded" type="search" id="search-value"
-          placeholder="Recipe Search" aria-label="Search">
-      <button data-id="{{ g.user.id }}" class="btn btn-primary my-2 my-lg-0 mr-1" type="submit">Search</button>
-      </form>
+    <input data-id="{{ g.user.id }}" class="form-control mr-lg-2 rounded" type="search" id="search-value"
+        placeholder="Recipe Search" aria-label="Search">
+    <button data-id="{{ g.user.id }}" class="btn btn-primary my-2 my-lg-0 mr-1" type="submit">Search</button>
+    </form>
 </div>
     
     <!-- User Signup/login -->
 
     <a class="avatar-link" id="profile-link" href="{{ url_for('update_user', id=g.user.id) }}"></a>
-    
+    {% comment %} <a class="avatar-link px-2 ml-auto avatar" id="profile-link" href="{{ url_for('view_user', id=g.user.id) }}"
+        style="background-image:url('{{g.user.img_url}}')"> </a> {% endcomment %}
+
     {% else %}
-        <div class="nav-item">
+        <div class="nav-item mx-2">
           <button class="btn btn-outline-info my-1 py-0">
             <a class="nav-link" href="{{ url_for('signup') }}">SignUp</a>
           </button>
         </div>
-        <div class="nav-item">
+        <div class="nav-item mx-2">
           <button class="btn btn-outline-info my-1 py-0">
             <a class="nav-link" href="{{ url_for('login') }}">LogIn</a>
           </button>
@@ -85,7 +88,7 @@
       </div>
     </nav>
 
-  <main class="container">
+  <main class="container-fluid">
     {% block content %}
     {% endblock %}
 
@@ -117,7 +120,7 @@
 </body>
 
 <footer class="bg-dark my-0 py-1 d-flex justify-content-center align-items-center">
-  <p class="small text-center text-light my-2 mr-3">&copy; Food Planner 2020</p>
+  <p class="small text-center text-light my-2 mr-3">&copy; CookingClub 2021</p>
   <p class="my-2">
     <a href="#" class="footer-link"><i class="fab fa-facebook-square fa-2x ml-4 mr-2"></i></a>
     <a href="#" class="footer-link"><i class="fab fa-instagram fa-2x mx-2"></i></a>
