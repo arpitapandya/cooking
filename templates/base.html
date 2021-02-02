@@ -36,37 +36,33 @@
       
       {% if g.user %}
       <li class="navbar-nav me-auto mb-2 mb-lg-0">
-            <a class="nav-link" href="{{ url_for('my_recipes') }}">My Recipes</a>
+            <a class="nav-link" href="{{ url_for('view_saved_recipes') }}">My Recipes</a>
       </li>
-
-      <!-- SEARCH CUISINE -->
     
-      <form data-id="{{ g.user.id }}" class="form-inline my-2 justify-content-right flex-nowrap mx-auto" id="search-form">
-      
-      <div class="input-group" id="cuisine-container">
-        
-        <select class="custom-select mr-1 p-1 rounded" id="cuisine" data-container="body">
-          <option value="" selected> <span class="text-muted">Cuisines</span> </option>
-          {% for cuisine in cuisines %}
-          <option value="{{cuisine}}">{{ cuisine.capitalize() }}</option>
-          {% endfor %}
-         </select>
-      </div>
-
-
-      <input data-id="{{ g.user.id }}" class="form-control mr-lg-2 rounded" type="search" id="search-value"
-          placeholder="Recipe Search" aria-label="Search">
-      <button data-id="{{ g.user.id }}" class="btn btn-primary my-2 my-lg-0 mr-1" type="submit">Search</button>
+  <form data-id="{{ g.user.id }}" class="form-inline my-2 justify-content-right flex-nowrap mx-auto" id="search-form">
 
       <!--Diet-->
-      <div class="input-group">
+    <div class="input-group">
           <select class="custom-select mr-1 p-1 rounded" id="diet">
             <option value="" selected> <span class="text-muted">Diets</span> </option>
             {% for diet in diets %}
             <option value="{{diet}}">{{ diet.capitalize() }}</option>
             {% endfor %}
           </select>
-        </div>
+     </div>
+
+    <div class="input-group" id="cuisine-container">  
+        <select class="custom-select mr-1 p-1 rounded" id="cuisine" data-container="body">
+          <option value="" selected> <span class="text-muted">Cuisines</span> </option>
+          {% for cuisine in cuisines %}
+          <option value="{{cuisine}}">{{ cuisine.capitalize() }}</option>
+          {% endfor %}
+         </select>
+    </div>
+
+      <input data-id="{{ g.user.id }}" class="form-control mr-lg-2 rounded" type="search" id="search-value"
+          placeholder="Recipe Search" aria-label="Search">
+      <button data-id="{{ g.user.id }}" class="btn btn-primary my-2 my-lg-0 mr-1" type="submit">Search</button>
       </form>
 </div>
     
@@ -75,14 +71,16 @@
     <a class="avatar-link" id="profile-link" href="{{ url_for('update_user', id=g.user.id) }}"></a>
     
     {% else %}
-        <li class="nav-item">
+        <div class="nav-item">
           <button class="btn btn-outline-info my-1 py-0">
             <a class="nav-link" href="{{ url_for('signup') }}">SignUp</a>
           </button>
-        </li>
-        <li class="nav-item">
+        </div>
+        <div class="nav-item">
+          <button class="btn btn-outline-info my-1 py-0">
             <a class="nav-link" href="{{ url_for('login') }}">LogIn</a>
-        </li>
+          </button>
+        </div>
         {% endif %}
       </div>
     </nav>
@@ -113,6 +111,9 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
     integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
     crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/helper.js"></script>
 </body>
 
 <footer class="bg-dark my-0 py-1 d-flex justify-content-center align-items-center">

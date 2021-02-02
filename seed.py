@@ -1,6 +1,6 @@
 """seed the database"""
 
-from models import db, connect_db, User, UserRecipe, Recipe, Step, Ingredient, RecipeIngredient, ListIngredient, GroceryList
+from models import db, connect_db, User, UserRecipe, Recipe, Step, Ingredient, Measurement, ListIngredient, GroceryList
 from app import app
 
 # Create all tables

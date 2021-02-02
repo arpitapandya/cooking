@@ -14,22 +14,23 @@
 {% for recipe in g.user.recipes %}
 
 <div class="card" style="width: 18rem;">
-    <a href="{{ url_for('my_recipes', id=recipe.id) }}"
-  <img class="card-img-top" src="{{recipe.image}} class="card-img-top img-fluid" alt="image of {{recipe.title}}">
+    <a href="{{ url_for('view_recipes_details', id=recipe.id) }} class="card-link">
+  <img class="card-img-top" src="{{recipe.image}}" class="card-img-top img-fluid" alt="Photo of {{recipe.title}}">
   
-  <div class="card-body">
-    <h4 class="card-title d-inline">{{ recipe.title}}</h4>
+  <div class="card-body py-2">
+    <h4 class="card-title d-inline">{{ recipe.title }}</h4>
 
-    <form id="favoritelist-form" class="favoritelist-form d-inline">
+    <form id="favorite-form" class="favorite-form d-inline">
         {% if recipe.id in id_list %}
-        <button data-id="{{ recipe.id }}" class=btn btn-lg><span><i class="heart fa fa-heart-o"></i></span></button>
+        <button data-id="{{ recipe.id }}" class='btn btn-lg'><span><i class="heart fa fa-heart-o"></i></span></button>
         {% else %}
-        <button data-id="{{ recipe.id }}" class=btn btn-lg><span><i class="heart fa fa-heart-o"></i></span></button>
+        <button data-id="{{ recipe.id }}" class='btn btn-lg'><span><i class="heart fa fa-heart-o"></i></span></button>
         {% endif %}
     </form>
 
     <p class="lead">Servings: {{ recipe.servings }}</p>
-    <p class="lead  mb-0">Recipe Ready In: {{recipe.readyInMinutes }}minutes</a>
+    <p class="lead mb-0">Recipe Ready In: {{recipe.readyInMinutes }}minutes</a>
+    <a class="small text-muted" href="{{ recipe.sourceUrl }} target="_blank">View Original</a>
   <br>
   </div>
   </a>

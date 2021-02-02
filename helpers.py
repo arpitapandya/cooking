@@ -1,4 +1,4 @@
-from models import User, db, Recipe, Step, Ingredient, RecipeIngredient
+from models import User, db, Recipe, Step, Ingredient, Measurement
 from flask import request, session
 import os
 import requests
@@ -27,12 +27,12 @@ def add_user_data(form):
     username = form.username.data
     password = form.password.data
     email = form.email.data
-    img_Url = form.img_Url.data
+    img_url = form.img_Url.data
     return {
         'username': username,
         'password': password,
         'email': email,
-        'img_Url': img_Url
+        'img_url': img_url
     }
 
 def create_login_data(form):
@@ -53,7 +53,8 @@ def generate_headers(form):
         'x-rapidapi-key': API_KEY
     }
 
-def do_search_params(query=None, cuisine=None, diet=None, offset=0, number=12):
+def generate_search_params(query=None, cuisine=None, diet=None, offset=0, number=12):
+    """ returns querystring object for recipe search"""
 
     return {
         "apikey": API_KEY,
@@ -107,7 +108,7 @@ def get_recipe(id):
 
 def add_ingredients_to_db(recipe_data):
     """ 
-    Add ingredients and measurements to the db
+    Add ingredients to the db
     recipe_data (obj): recipe data from the Spoonacular API with extendedIngredients - a list of ingredient objects 
     Returns a list of SQLAlchemy ingredient objects
     """
@@ -123,8 +124,7 @@ def add_ingredients_to_db(recipe_data):
                 name = ingredient.get('name', None)
                 original = ingredient.get('original', None)
 
-                new_ingredient = Ingredient(
-                    id=id, name=name, original=original)
+                new_ingredient = Ingredient(id=id, name=name, original=original)
 
                 new_ingredient = add_and_commit(new_ingredient)
                 print(f"\n Created new ingredient {new_ingredient} \n")
@@ -132,8 +132,7 @@ def add_ingredients_to_db(recipe_data):
                 ingredient_list.append(new_ingredient)
                 print(f"\n Ingredient added to list: {ingredient_list} \n")
 
-                recipe_data = add_measurement_for_ingredient(
-                    ingredient, recipe_data)
+                recipe_data = add_measurement_for_ingredient(ingredient, recipe_data)
 
         except Exception as e:
             print(str(e))
@@ -142,6 +141,26 @@ def add_ingredients_to_db(recipe_data):
             db.session.rollback()
             continue
     return ingredient_list
+
+def add_measurement_for_ingredient(ingredient, recipe_data):
+    """ Add Recipe ingredients measurements in a recipe to the database """
+
+    try:
+        recipe_id = recipe_data.get('id', None)
+        ingredient_id = ingedient.get('id', None)
+        amt = ingredient.get('amt', None)
+        unit = ingredient.get('unit', None)
+        new_measurement = Measurement(ingredient_id=ingredient_id, recipe_id=recipe_id, amt=amt, unit=unit)
+        new_measurement = add_and_commit(new_measurement)
+
+    except Exception as e:
+        db.session.rollback()
+        # import pdb
+        # pdb.set_trace()
+        print('***********************')
+        print(str(e))
+        print('***********************')
+    return recipe_data
 
 def add_recipe_to_db(recipe_data):
     """
@@ -165,12 +184,10 @@ def add_recipe_to_db(recipe_data):
     ketogenic = recipe_data.get('ketogenic', None)
 
     recipe = Recipe(id=id, title=title, image=image, sourceName=sourceName, sourceUrl=sourceUrl,
-                    readyInMinutes=readyInMinutes, servings=servings, instructions=instructions, vegetarian=vegetarian, vegan=vegan, glutenFree=glutenFree, dairyFree=dairyFree, sustainable=sustainable, ketogenic=ketogenic, whole30=whole30)
+                    readyInMinutes=readyInMinutes, servings=servings, instructions=instructions, vegetarian=vegetarian, vegan=vegan, glutenFree=glutenFree, dairyFree=dairyFree, sustainable=sustainable, ketogenic=ketogenic)
     try:
         recipe = add_and_commit(recipe)
     except Exception:
-        # import pdb
-        # pdb.set_trace()
         db.session.rollback()
         print(str(Exception))
         return "Recipe couldn't be saved. Please try again."

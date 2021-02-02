@@ -1,10 +1,10 @@
 from flask import Flask, request, render_template, redirect, url_for, g, jsonify, flash, abort, session
-from models import db, connect_db, User, Recipe, Ingredient, Step, UserRecipe
+from models import db, connect_db, User, Recipe, Ingredient, Step, UserRecipe, Measurement, ListIngredient
 from sqlalchemy.exc import IntegrityError
 
 from forms import SignUpForm, LoginForm, GroceryListForm
 from flask_debugtoolbar import DebugToolbarExtension
-from helpers import add_user_data, create_login_data, generate_headers, do_search_params, add_and_commit, do_search, get_recipe, do_login, do_logout, get_recipe, add_ingredients_to_db, add_recipe_to_db, API_BASE_URL, valid_cuisines, valid_diets
+from helpers import add_user_data, create_login_data, generate_headers, generate_search_params,add_and_commit, do_search, get_recipe, do_login, do_logout, get_recipe, add_ingredients_to_db, add_recipe_to_db, add_measurement_for_ingredient, API_BASE_URL, valid_cuisines, valid_diets
 from secrets import API_KEY
 import requests
 import os
@@ -125,7 +125,7 @@ def load():
     if len(data['results']) == 0:
       return (jsonify(data=data), 200)
     
-    user_favorites =[fav.id for fav in g.user.recipes]
+    user_favorites =[f.id for f in g.user.recipes]
     favorites = [r['id']
             for r in data['results'] if r['id'] in user_favorites]
     resp_json = jsonify(data=data, favorites=favorites)
@@ -144,7 +144,7 @@ def search_recipes():
     if len(data['results']) == 0:
       return (jsonify(data=data), 200)
     
-    user_favorites = [fav.id for fav in g.user.recipes]
+    user_favorites = [f.id for f in g.user.recipes]
     favorites = [r['id'] for r in data['results'] if r['id'] in user_favorites]
     resp_json = jsonify(data=data, favorites=favorites)
 
@@ -171,11 +171,11 @@ def update_user(id):
   try:
     user = User.query.get_or_404(id)
     new_email = request.json.get('email', user.email)
-    new_image_url = request.json.get('imageurl', user.image_url)
+    new_img_url = request.json.get('imgUrl', user.image_url)
     if new_email:
       user.email = new_email
-    if new_image_url:
-      user.image_url = new_image_url
+    if new_img_url:
+      user.img_url = new_img_url
     
     db.session.commit()
 
@@ -187,30 +187,31 @@ def update_user(id):
 ### Recipe Routes###
 
 @app.route('/favorites/')
-def my_recipes():
+def view_saved_recipes():
   """View favorited recipes"""
   if not g.user:
     flash('You must log in first', 'warning')
     return redirect(url_for('login'))
-  list_id = [recipe.id for recipe in g.user.recipes]
+    
+  id_list = [recipe.id for recipe in g.user.recipes]
 
-  return render_template('users/favorites.html', list_id=list_id)
+  return render_template('users/favorites.html', id_list=id_list)
 
 @app.route('/favorites/<int:id>', methods=['POST'])
-def my_favorites(id):
+def add_favorite(id):
   """Add recipe to favorites"""
   if not g.user:
     return abort(401)
 
-    recipe = Recipe.query.filter_by(id=id).first()
+  recipe = Recipe.query.filter_by(id=id).first()
 
-    if not recipe:
-      resp = get_recipe(id)
-      data = resp.json()
+  if not recipe:
+    resp = get_recipe(id)
+    data = resp.json()
 
-      recipe = add_recipe_to_db(data)
-      g.user.recipes.append(recipe)
-      db.session.commit()
+    recipe = add_recipe_to_db(data)
+    g.user.recipes.append(recipe)
+    db.session.commit()
   else:
     g.user.recipes.append(recipe)
     db.session.commit()
@@ -220,14 +221,14 @@ def my_favorites(id):
   return (resp_json, 200)
 
 @app.route('/favorites/<int:id>', methods=['DELETE'])
-def delete_favorite(id):
+def remove_favorite(id):
   """Remove recipe from favorites"""
   if not g.user:
     return abort(401)
   try:
     recipe = Recipe.query.filter_by(id=id).first()
     UserRecipe.query.filter(
-      UserRecipe.user_id == g.user.id, UserRecipe.recipe_id == recipe.id).delete()
+        UserRecipe.user_id == g.user.id, UserRecipe.recipe_id == recipe.id).delete()
     db.session.commit()
     resp_json = jsonify(recipe=recipe.serialize(), message="Recipe removed!")
     return (resp_json, 200)
@@ -236,9 +237,8 @@ def delete_favorite(id):
     return jsonify(errors=str(e))
 
 @app.route('/recipes/<int:id>')
-def view_recipe_info(id):
+def view_recipe_details(id):
   """View info of recipe"""
-
   if not g.user:
     flash("You must log in first!", 'warning')
     return redirect(url_for('login'))

@@ -23,7 +23,7 @@ class User(db.Model):
     img_Url = db.Column(db.String, default='/static/images/cooking.png')
     is_admin = db.Column(db.Boolean, default=False)
     recipes = db.relationship('Recipe', secondary="users_recipes", backref='users')
-    grocery_list = db.relationship('GroceryList', backref='user')
+    # grocery_list = db.relationship('GroceryList', backref='user')
 
     @classmethod
     def signup(cls, data):
@@ -71,6 +71,7 @@ class User(db.Model):
    
 class UserRecipe(db.Model):
     """ Many to many Users to Recipes """
+
     __tablename__ = "users_recipes"
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), primary_key=True)
@@ -83,12 +84,19 @@ class Recipe(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String, nullable=False)
-    img_Url = db.Column(db.String, default="/static/images/recipe.png")
-    source_Url = db.Column(db.String)
-    description = db.Column(db.String)
+    image = db.Column(db.String, nullable=False)
+    sourceName = db.Column(db.String, nullable=False)
+    sourceUrl = db.Column(db.String)
+    readyInMinutes = db.Column(db.Integer)
     servings = db.Column(db.Integer)
-    ready_in = db.Column(db.Integer)
-    ingredients = db.relationship("Ingredient", secondary="recipes_ingredients", backref="recipes")
+    instructions = db.Column(db.String)
+    vegetarian = db.Column(db.Boolean, default=False)
+    vegan = db.Column(db.Boolean, default=False)
+    glutenFree = db.Column(db.Boolean, default=False)
+    dairyFree = db.Column(db.Boolean, default=False)
+    sustainable = db.Column(db.Boolean, default=False)
+    ketogenic = db.Column(db.Boolean, default=False)
+    ingredients = db.relationship("Ingredient", secondary="measurements", backref="recipes")
     steps = db.relationship("Step", backref="recipe")
 
     def _repr_(self):
@@ -99,13 +107,14 @@ class Recipe(db.Model):
         return {
             'id': self.id,
             'title': self.title,
-            'image_url': self.image,
-            'source_url': self.sourceName,
+            'img_Url': self.imageUrl,
+            'source_name': self.sourceName,
+            'source_url': self.sourceUrl,
             'ready_in': self.readyInMinutes,
             'servings': self.servings,
-            'steps': self.steps,
             'instructions': self.instructions,
-            'ingredients': self.ingredients
+            'ingredients': [ingredient.serialize() for ingredient in self.ingredients],
+            'steps': [step.serialize() for step in self.steps]
         }
 
 class Step(db.Model):
@@ -123,7 +132,7 @@ class Step(db.Model):
     
     def show_step(self):
         """return string of steps"""
-        return f"{self.number}. {self.step}"
+        return f"{self.number} {self.step}"
 
     def serialize(self):
         """Ingredients serialize"""
@@ -140,7 +149,7 @@ class Ingredient(db.Model):
     __tablename__ = "ingredients"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False, unique=True)
     original = db.Column(db.String)
 
     def _repr_(self):
@@ -155,37 +164,38 @@ class Ingredient(db.Model):
         }
 
 
-class RecipeIngredient(db.Model):
+class Measurement(db.Model):
     """ Many to many Recipes to Ingredients. """
 
-    __tablename__ = "recipes_ingredients"
+    __tablename__ = "measurements"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey("recipes.id"))
     ingredient_id = db.Column(db.Integer, db.ForeignKey("ingredients.id"))
     amt = db.Column(db.Float)
-    ingredient = db.relationship("Ingredient", backref="recipes_ingredients")
-    recipe = db.relationship("Recipe", backref="recipes_ingredients")
+    unit = db.Column(db.String)
+    ingredient = db.relationship("Ingredient", backref="measurements")
+    recipe = db.relationship("Recipe", backref="measurements")
 
-    def show_recipeingredient(self):
+    def show_measurement(self):
         """ Returns a string with recipe ingredients"""
-        return f"{{self.amt}} {self.ingredient.name}"
+        return f"{int(self.amt)} {self.unit} {self.ingredient.name}"
 
 class ListIngredient(db.Model):
     """ List Ingredients for the recipe. """
 
     __tablename__ = "list_ingredients"
 
-    list_id = db.Column(db.Integer, db.ForeignKey("grocerylist.id", ondelete="CASCADE"), primary_key=True)
+    list_id = db.Column(db.Integer, primary_key=True)
     ingredient_id = db.Column(db.Integer, db.ForeignKey("ingredients.id", ondelete="CASCADE"), primary_key=True)
 
-class GroceryList(db.Model):
-    """ Grocery List for the ingredients required. """
+# class GroceryList(db.Model):
+#     """ Grocery List for the ingredients required. """
 
-    __tablename__ = "grocerylist"
+#     __tablename__ = "grocerylist"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(50), nullable=False)
-    date_created = db.Column(db.DateTime, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    ingredients = db.relationship('Ingredient', secondary="list_ingredients", backref="grocerylist")
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     title = db.Column(db.String(50), nullable=False)
+#     date_created = db.Column(db.DateTime, nullable=False)
+#     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+#     ingredients = db.relationship('Ingredient', secondary="list_ingredients", backref="grocerylist")
