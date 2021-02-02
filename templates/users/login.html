@@ -1,24 +1,25 @@
 {% extends 'base.html' %}
 
-{% block body_class %}Login{% endblock %}
+{% block %}Login{% endblock %}
 
 {% block content %}
 
+<h1 class="display-1 text-center">CookingClub</h1>
     <div class="row justify-content-md-center">
-        <div class="col-md-7 col-lg-5">
-            <h2 class="join-message">Food Planner.</h2>
+        <div class="col-md-7 col-lg-5 my-2">
+            <h2 class="join-message">Welcome!</h2>
 
-            <form method="POST" id="user_form">
+            <form method="POST" id="login_form" class="my-3">
             {{ form.hidden_tag() }}
 
-            {% for field in form if field.widget.input_type != 'hidden' %}
+        {% for field in form if field.widget.input_type != 'hidden' %}
           {% for error in field.errors %}
             <span class="text-danger">{{ error }}</span>
           {% endfor %}
-          {{ field(placeholder=field.label.text, class="form-control") }}
+          {{ field(placeholder=field.label.text, class="form-control my-30") }}
         {% endfor %}
 
-        <button class="btn btn-primary btn-block btn-lg">Log in</button>
+        <button class="btn btn-primary btn-block btn-lg">Hungry!</button>
       </form>
     </div>
   </div>
