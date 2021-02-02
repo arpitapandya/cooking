@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Recipe Description{% endblock %}
+{% block title %}Recipes{% endblock %}
 
 {% block content %}
 
@@ -11,7 +11,7 @@
         <div class="col-sm-12 col-md-6 text-center">
             <h1 class="display-4">{{ recipe.title }}</h1>
             <hr class="my-2">
-            <p class="lead my-1">Serves: {{recipes.servings}}</p>
+            <p class="lead my-1">Serves: {{recipe.servings}}</p>
             <p class="lead my-1">Reday In: {{ recipe.readyInMinutes }}Minutes</p>
         </div>
 
@@ -22,15 +22,15 @@
                 <small class="small"><a href="{{ recipe.sourceUrl }}" class="text-muted mx-auto" target="_blank">Origin from {{ recipe.sourceName }}</a></small>
                 <form id="favorite-form" class="favorite-form d-inline">
                     {% if recipe in g.user.recipes %}
-                    <button data-id="{{ recipe.id }}" class="btn btn-lg"><span><i class="heart fa fa-heart-o"></i></span></button>
+                    <button data-id="{{ recipe.id }}" class="btn btn-lg"><span><i class="fas fa-heart"></i></span></button>
                     {% else %}
-                    <button data-id="{{ recipe.id }}" class="btn btn-lg"><span><i class="heart fa fa-heart-o"></i></span></button>
+                    <button data-id="{{ recipe.id }}" class="btn btn-lg"><span><i class="fas fa-heart"></i></span></button>
                     {% endif %}
                 </form>
             </span>
             
             <!-- diet -->
-            {% if recipe.glutenfree %}
+            {% if recipe.glutenFree %}
             <br>
             <small class="text-primary">Gluten Free!</small>
             {% endif %}
@@ -52,6 +52,11 @@
 
             {% if recipe.ketogenic %}
             <br>
+            <small class="text-primary">Ketogenic</small>
+            {% endif %}
+
+            {% if recipe.vegan %}
+            <br>
             <small class="text-primary">Vegan</small>
             {% endif %}
     </div>
@@ -60,8 +65,9 @@
 <hr class="my-4">
 
 <div class="row p-0 m-0">
+
     <div class="col-sm-12 col-md-5 mx-1 mb-2 text-center">
-        <h4 class="h4">instructions</h4>
+        <h4 class="h4">Instructions</h4>
         {% if recipe.steps %}
         <ul class="list-group list-group-flush text-center">
             {% for step in recipe.steps %}
@@ -70,11 +76,9 @@
         </ul>
         {% elif recipe.instructions %}
         <p class="instructions">{{ recipe.instructions.replace('.', '. \n \n') }}</p>
-            {% else %}
-            <p class="">Oops!
-            </p>
-            <p class="">We can not find instructions for this recipe!
-            </p>
+        {% else %}
+        <p class="">Oops!</p>
+        <p class="">We can not find instructions for this recipe!</p>
             {% endif %}
     </div>
 
@@ -87,17 +91,17 @@
         {% endfor %}
         <button id='add-ingredients' data-id="{{ recipe.id }}" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Add to Shopping List</button>
 
-                {% elif recipe.extendedIngredients %}
+            {% elif recipe.extendedIngredients %}
                
-                {% for ingredient in recipe.extendedIngredients %}
-                <p class="ingredient" data-id="{{ ingredient.id }}">{{ ingredient.originalString }}</p>
-                {% endfor %}
+            {% for ingredient in recipe.extendedIngredients %}
+            <p class="ingredient" data-id="{{ ingredient.id }}">{{ ingredient.originalString }}</p>
+            {% endfor %}
 
-                <button id='add-ingredients' data-id="{{ recipe.id }}" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Add to Shopping List</button>
-                {% else %}
-                <p class="">Oops!</p>
-                <p class="">We can not find the ingredients for this recipe!</p>
-                {% endif %}
+            <button id='add-ingredients' data-id="{{ recipe.id }}" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Add to Shopping List</button>
+            {% else %}
+            <p class="">Oops!</p>
+            <p class="">We can not find the ingredients for this recipe!</p>
+            {% endif %}
             </div>
         </div>
     </div>

@@ -70,9 +70,7 @@
     <!-- User Signup/login -->
 
     <a class="avatar-link" id="profile-link" href="{{ url_for('update_user', id=g.user.id) }}"></a>
-    {% comment %} <a class="avatar-link px-2 ml-auto avatar" id="profile-link" href="{{ url_for('view_user', id=g.user.id) }}"
-        style="background-image:url('{{g.user.img_url}}')"> </a> {% endcomment %}
-
+    
     {% else %}
         <div class="nav-item mx-2">
           <button class="btn btn-outline-info my-1 py-0">
