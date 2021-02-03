@@ -1,5 +1,5 @@
 function addSentinel() {
-    $(createSentineDivHTML()).insertAFter('#recipe-container');
+    $(createSentinelDivHTML()).insertAfter('#recipe-container');
     intersectionObserver.observe(document.querySelector('#sentinel'));
 }
 
@@ -9,16 +9,16 @@ function displayResults(resp) {
     });
 
     setTimeout(() => {
-        const $p1 = makeP1();
+        const $h1 = makeH1();
         const $hr = makeHr();
         const $total = makeTotalResults(resp.data.data);
         const $row = makeRow();
-        $('main').prepend($p1).hide().slideDown('slow');
-        $('p1').after($row).after($hr).after($total);
+        $('main').prepend($h1).hide().slideDown('slow');
+        $('h1').after($row).after($hr).after($total);
         resp.data.data.results.forEach((recipe) => {
             showRecipeCard(recipe, resp.data.data, resp.data.favorites);
         });
-        $('form').on('click', '.fa-heart-o', handleFavorite);
+        $('form').on('click', '.fa-heart', handleFavorite);
     }, 800);
 }
 
@@ -54,14 +54,52 @@ function generateRecipeCardHTML(recipe, data, favorites) {
     </div>
 </div>`;
 }
+
+function updateListContainer() {
+	$('#list-container')
+		.empty()
+		.html(
+			`<p class="text-center lead">Nothing added!</p> <br> <a class="btn btn-outline-primary" href="/favorites">View Favorites</a>`
+		);
+}
 function makeTotalResults(data) {
 	let $newTotal = $('<p>').text(`${data.totalResults} total results`).addClass('small text-center text-dark');
 	return $newTotal;
 }
 
-function makeP1(text = 'Recipe') {
-	let $newP1 = $('<h1>').text(text).addClass('display-2 text-center');
-	return $newP1;
+function generateRecipeCardHTML(recipe, data, favorites) {
+	let favButton;
+
+	if (favorites.includes(recipe.id)) {
+		favButton = `<button id="${recipe.id}" data-id="${recipe.id}" class='btn btn-sm'><span><i  class="fas fa-heart"></i></span></button>`;
+	} else {
+		favButton = `<button id="${recipe.id}" data-id="${recipe.id}" class='btn btn-sm'><span><i class="far fa-heart"></i></span></button>`;
+	}
+
+	return `<div class="card border mb-4 mx-auto p-2 rounded text-center">
+	<a href="/recipes/${recipe.id}" class="card-link">
+	<img src="${data.baseUri}${recipe.image}" class="card-img-top img-fluid" alt="Photo of ${recipe.title}">
+	<div class="card-body py-2">
+	  <h5 class="card-title d-inline">${recipe.title}</h5>
+	  <form id="favorite-form" class="favorite-form d-inline">
+		${favButton}
+	  </form>
+	  <p class="lead mb-0">Ready In: ${recipe.readyInMinutes} minutes</p>
+	  <p class="lead">Servings: ${recipe.servings}</p>
+	  <a class="small text-muted" href="${recipe.sourceUrl}">View original</a>
+	  <br>
+	  </a>
+	</div>
+</div>`;
+}
+function makeH1(text = 'Recipe') {
+	let $newH1 = $('<h1>').text(text).addClass('display-2 text-center');
+	return $newH1;
+}
+
+function makeTotalResults(data) {
+	let $newTotal = $('<p>').text(`${data.totalResults} total results`).addClass('small text-center text-dark');
+	return $newTotal;
 }
 
 function makeHr() {
@@ -161,6 +199,22 @@ function generateIngredientHTML(ingredient) {
 	</span>`;
 }
 
+function generateRecipeModalHTML(data) {
+	return `<div id="myModal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	  <div class="modal-header">
+		<p class="mx-auto my-0">${data.message}</p>
+      </div>
+	  <div class="modal-footer">
+        <a class="btn btn-primary text-white ml-auto" href="/recipes/${data.recipe.id}") }}">Recipe Details</a>
+        <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Thanks</button>
+      </div>
+    </div>
+  </div>
+</div>`;
+}
+
 function generateUpdateModalHTML(id) {
 	return `<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
 	<div class="modal-dialog" role="document">
@@ -191,8 +245,29 @@ function generateUpdateModalHTML(id) {
 	</div>
   </div>`;
 }
+
+function generateAlertHTML(message, category) {
+	return `<div class="container w-25 mx-auto feedback">
+	<div class="alert alert-${category} alert-dismissible fade show text-center" role="alert">
+	${message}
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  </div>
+  </div>`;
+}
 function createSentinelDivHTML() {
 	return `<div class="d-flex justify-content-center mb-3" id="sentinel">
       <div class="spinner-border" role="status"></div>
     </div>`;
+}
+
+function addShowModal(modalHTML) {
+	$('main').append(modalHTML);
+	$('#myModal').modal('show');
+}
+
+function doNothingOnSubmit(evt) {
+	evt.preventDefault();
+	return;
 }

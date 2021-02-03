@@ -12,7 +12,7 @@ class SignUpForm(FlaskForm):
     email = EmailField("Email", validators=[InputRequired(message="Email required"), Email(message="Invalid !")])
     password = PasswordField("Password", validators=[InputRequired(message="Please create a Password")])
     confirm = PasswordField("Confirm Password", validators=[InputRequired(message="Please input the same Password")])
-    img_Url = URLField("URL(Optional)", validators=[Optional()])
+    img_url = URLField("URL(Optional)", validators=[Optional()])
 
 class LoginForm(FlaskForm):
     """ Login form."""

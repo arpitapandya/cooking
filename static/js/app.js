@@ -38,10 +38,10 @@ async function handleSearch(evt) {
 		console.log('There was an error - please refresh and try again');
 		console.log('response: ', response);
 	} else {
-		return(response);
+		displayResults(response);
 	}
 	setTimeout(() => {
-		if (!$('#sentinel').length) addSetinel();
+		if (!$('#sentinel').length) addSentinel();
 		offset += 12;
 	}, 800);
 }
@@ -75,9 +75,9 @@ async function loadItems() {
 			showRecipeCard(recipe, response.data.data, response.data.favorites);
 		});
 
-		$('.favorite-form').on('click', '.fa-heart-o', handleFavorite);
+		$('.favorite-form').on('click', '.fa-heart', handleFavorite);
 		offset += 12;
-	}
+	 }
 }
 
 async function handleAddIngredient(evt) {

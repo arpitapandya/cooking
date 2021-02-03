@@ -44,7 +44,7 @@
     <!--Diet & cuisine search form-->
   <form data-id="{{ g.user.id }}" class="form-inline my-2 justify-content-right flex-nowrap mx-auto" id="search-form">
     <div class="input-group">
-          <select class="custom-select mr-1 p-1 rounded" id="diet">
+          <select class="btn btn-info btn-md dropdown-toggle-split" aria-haspopup="true" id="diet">
             <option value="" selected> <span class="text-muted">Diets</span></option>
             {% for diet in diets %}
             <option value="{{diet}}">{{ diet.capitalize() }}</option>
@@ -53,7 +53,7 @@
      </div>
     <!--cuisine-->
     <div class="input-group" id="cuisine-container">  
-        <select class="custom-select mr-1 p-1 rounded" id="cuisine" data-container="body">
+        <select class="btn btn-info btn-md dropdown-toggle-split" aria-haspopup="true" id="cuisine" data-container="body">
           <option value="" selected> <span class="text-muted">Cuisines</span> </option>
           {% for cuisine in cuisines %}
           <option value="{{cuisine}}">{{ cuisine.capitalize() }}</option>

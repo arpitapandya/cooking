@@ -2,10 +2,10 @@ from models import User, db, Recipe, Step, Ingredient, Measurement
 from flask import request, session
 import os
 import requests
-from secrets import API_KEY
+from secrets import api_key
 
 CURRENT_USER_KEY = "user_id"
-API_BASE_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
+API_BASE_URL = "https://api.spoonacular.com"
 
 valid_diets = ['vegan', 'vegetarian']
 valid_cuisines = ['indian', 'chinese', 'spanish', 'african', 'southern', 'mexican', 'korean', 'japanese', 'american', 'german']
@@ -27,7 +27,7 @@ def add_user_data(form):
     username = form.username.data
     password = form.password.data
     email = form.email.data
-    img_url = form.img_Url.data
+    img_url = form.img_url.data
     return {
         'username': username,
         'password': password,
@@ -46,18 +46,18 @@ def create_login_data(form):
         "password": password
     }
 
-def generate_headers(form):
+def generate_headers():
     """Returns headers"""
     return {
         'x-rapidapi-host': "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
-        'x-rapidapi-key': API_KEY
+        'x-rapidapi-key': api_key
     }
 
 def generate_search_params(query=None, cuisine=None, diet=None, offset=0, number=12):
     """ returns querystring object for recipe search"""
 
     return {
-        "apikey": API_KEY,
+        "apiKey": api_key,
         "query": query,
         "cuisine": cuisine,
         "diet": diet,
@@ -66,20 +66,16 @@ def generate_search_params(query=None, cuisine=None, diet=None, offset=0, number
     }
 
 def add_and_commit(obj):
-    """
-    Add and commit an obj to the db
-    Returns obj
-    """
+    """Add and commit an obj to the db Returns obj"""
+
     db.session.add(obj)
     db.session.commit()
     return obj
 
 
 def do_search(request):
-    """
-    Get recipes from user request from Spoonacular API
-    Returns a response
-    """
+    """Get recipes from user request from Spoonacular API Returns a response"""
+
     query = request.args.get('query', "")
     cuisine = request.args.get('cuisine', "")
     diet = request.args.get('diet', "")
@@ -87,31 +83,26 @@ def do_search(request):
 
     headers = generate_headers()
     querystring = generate_search_params(query, cuisine, diet, offset)
-
+    print(querystring)
     response = requests.request(
-        "GET", f"{API_BASE_URL}/recipes/search", headers=headers, params=querystring)
+        "GET", f"{API_BASE_URL}/recipes/search?apiKey={api_key}", headers=headers, params=querystring)
 
     return response
 
 
 def get_recipe(id):
-    """
-    Get recipe information from API
-    Returns a recipe object
-    """
+    """Get recipe information from API Returns a recipe object"""
+    
     headers = generate_headers()
     response = requests.request(
-        'GET', f"{API_BASE_URL}/recipes/{id}/information", headers=headers, data={'apiKey': API_KEY, 'id': id})
+        'GET', f"{API_BASE_URL}/recipes/{id}/information?apiKey={api_key}", headers=headers)
 
     return response
 
 
 def add_ingredients_to_db(recipe_data):
-    """ 
-    Add ingredients to the db
-    recipe_data (obj): recipe data from the Spoonacular API with extendedIngredients - a list of ingredient objects 
-    Returns a list of SQLAlchemy ingredient objects
-    """
+    """ Add ingredients to the db recipe_data (obj): recipe data from the Spoonacular API with extendedIngredients - a list of ingredient objects Returns a list of SQLAlchemy ingredient objects"""
+
     ingredient_list = []
     for ingredient in recipe_data['extendedIngredients']:
         try:
@@ -148,9 +139,9 @@ def add_measurement_for_ingredient(ingredient, recipe_data):
     try:
         recipe_id = recipe_data.get('id', None)
         ingredient_id = ingedient.get('id', None)
-        amt = ingredient.get('amt', None)
+        amount = ingredient.get('amount', None)
         unit = ingredient.get('unit', None)
-        new_measurement = Measurement(ingredient_id=ingredient_id, recipe_id=recipe_id, amt=amt, unit=unit)
+        new_measurement = Measurement(ingredient_id=ingredient_id, recipe_id=recipe_id, amount=amount, unit=unit)
         new_measurement = add_and_commit(new_measurement)
 
     except Exception as e:
@@ -163,11 +154,8 @@ def add_measurement_for_ingredient(ingredient, recipe_data):
     return recipe_data
 
 def add_recipe_to_db(recipe_data):
-    """
-    Add a recipe to the db
-    recipe_data (obj): recipe data from the Spoonacular API
-    Returns the recipe from the db
-    """
+    """Add a recipe to the db recipe_data (obj): recipe data from the Spoonacular API Returns the recipe from the db"""
+
     id = recipe_data.get('id', None)
     title = recipe_data.get('title', None)
     image = recipe_data.get('image', None)

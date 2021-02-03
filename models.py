@@ -16,11 +16,11 @@ class User(db.Model):
 
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, unique=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
     email = db.Column(db.String(120), nullable=False, unique=True)
-    password = db.Column(db.Text)
-    img_Url = db.Column(db.String, default='/static/images/cooking.png')
+    password = db.Column(db.Text, nullable=False)
+    img_url = db.Column(db.String, default='/static/images/cooking.png')
     is_admin = db.Column(db.Boolean, default=False)
     recipes = db.relationship('Recipe', secondary="users_recipes", backref='users')
     # grocery_list = db.relationship('GroceryList', backref='user')
@@ -33,7 +33,7 @@ class User(db.Model):
         hashed_utf8 = hashed.decode("utf8")
 
         # return instance of user w/username and hashed pwd
-        return cls(username=data['username'], password=hashed_utf8, email=data['email'], img_Url=data['img_Url'])
+        return cls(username=data['username'], password=hashed_utf8, email=data['email'], img_url=data['img_url'])
 
     # @classmethod
     # def signup(cls, data):
@@ -46,6 +46,7 @@ class User(db.Model):
 
     @classmethod
     def authenticate(cls, data):
+        """ Validate the username and password """
 
         user = User.query.filter_by(username=data['username']).first()
         if user and bcrypt.check_password_hash(user.password, data['password']):
@@ -55,7 +56,7 @@ class User(db.Model):
     
     @classmethod
     def default_image(cls):
-        return './static/images/icons8-kawaii-cupcake-64.png'
+        return './static/images/lemon-2409365_1280.jpg'
 
     def serialize(self):
         """ Serialize User instance for JSON """
@@ -66,7 +67,8 @@ class User(db.Model):
             'img_url': self.img_url,
             'is_admin': self.is_admin
         }
-    def _repr_(self):
+
+    def __repr__(self):
         return f'<User: {self.username}>'
    
 class UserRecipe(db.Model):
@@ -74,6 +76,7 @@ class UserRecipe(db.Model):
 
     __tablename__ = "users_recipes"
 
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey("recipes.id", ondelete='CASCADE'), primary_key=True)
 
@@ -99,7 +102,7 @@ class Recipe(db.Model):
     ingredients = db.relationship("Ingredient", secondary="measurements", backref="recipes")
     steps = db.relationship("Step", backref="recipe")
 
-    def _repr_(self):
+    def __repr__(self):
         return f'<Recipe: {self.title}>'
     
     def serialize(self):
@@ -107,7 +110,7 @@ class Recipe(db.Model):
         return {
             'id': self.id,
             'title': self.title,
-            'img_Url': self.imageUrl,
+            'img_Url': self.image,
             'source_name': self.sourceName,
             'source_url': self.sourceUrl,
             'ready_in': self.readyInMinutes,
@@ -124,15 +127,15 @@ class Step(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey("recipes.id"))
-    number = db.Column(db.Integer, nullable=False)
+    number = db.Column(db.Integer)
     step = db.Column(db.String)
 
-    def _repr_(self):
-        return f'<Step: {self.number}- {self.step}>'
+    def __repr__(self):
+        return f'<Step: {self.number} - {self.step}>'
     
     def show_step(self):
         """return string of steps"""
-        return f"{self.number} {self.step}"
+        return f"{self.number}.{self.step}"
 
     def serialize(self):
         """Ingredients serialize"""
@@ -148,11 +151,11 @@ class Ingredient(db.Model):
 
     __tablename__ = "ingredients"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False, unique=True)
     original = db.Column(db.String)
 
-    def _repr_(self):
+    def __repr__(self):
         return f'<Ingredient: {self.name}>'
     
     def serialize(self):
@@ -170,21 +173,21 @@ class Measurement(db.Model):
     __tablename__ = "measurements"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    recipe_id = db.Column(db.Integer, db.ForeignKey("recipes.id"))
     ingredient_id = db.Column(db.Integer, db.ForeignKey("ingredients.id"))
-    amt = db.Column(db.Float)
+    recipe_id = db.Column(db.Integer, db.ForeignKey("recipes.id"))
+    amount = db.Column(db.Float)
     unit = db.Column(db.String)
-    ingredient = db.relationship("Ingredient", backref="measurements")
     recipe = db.relationship("Recipe", backref="measurements")
+    ingredient = db.relationship("Ingredient", backref="measurements")
 
     def show_measurement(self):
         """ Returns a string with recipe ingredients"""
-        return f"{int(self.amt)} {self.unit} {self.ingredient.name}"
+        return f"{int(self.amount)} {self.unit} {self.ingredient.name}"
 
 class ListIngredient(db.Model):
     """ List Ingredients for the recipe. """
 
-    __tablename__ = "list_ingredients"
+    __tablename__ = "lists_ingredients"
 
     list_id = db.Column(db.Integer, primary_key=True)
     ingredient_id = db.Column(db.Integer, db.ForeignKey("ingredients.id", ondelete="CASCADE"), primary_key=True)
