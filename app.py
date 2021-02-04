@@ -122,7 +122,7 @@ def home_page():
 def load():
   """Load more results after the end of the page"""
   if request.args:
-    resppnse = do_search(request)
+    response = do_search(request)
     data = response.json()
 
     if len(data['results']) == 0:
