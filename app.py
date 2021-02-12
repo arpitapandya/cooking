@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, redirect, url_for, g, jsonify
 from models import db, connect_db, User, Recipe, Ingredient, Step, UserRecipe, Measurement
 from sqlalchemy.exc import IntegrityError
 
-from forms import SignUpForm, LoginForm, GroceryListForm
+from forms import SignUpForm, LoginForm
 from flask_debugtoolbar import DebugToolbarExtension
 from helpers import add_user_data, create_login_data, generate_headers, generate_search_params, add_and_commit, do_search, get_recipe, do_login, do_logout, add_ingredients_to_db, add_recipe_to_db, add_measurement_for_ingredient, API_BASE_URL, valid_cuisines, valid_diets
 from secrets import api_key
@@ -61,7 +61,7 @@ def signup():
       user = User.signup(user_data)
       add_and_commit(user)
       db.session.commit()
-    
+
     except IntegrityError as error:
       db.session.rollback()
       if (f'(username)=({user.username}) already exists') in error._message():
@@ -156,11 +156,12 @@ def search_recipes():
 @app.route('/users/<int:id>')
 def view_user(id):
   """ Display user """
+
   if not g.user:
     flash('You must log in first', 'warning')
     return redirect(url_for('login'))
-  
-  return render_template('users/user_profile.html')
+
+  return render_template('users/profile.html')
 
 @app.route('/users/<int:id>', methods=['PATCH'])
 def update_user(id):

@@ -53,10 +53,10 @@ class User(db.Model):
             return user
         else:
             return False
-    
+
     @classmethod
     def default_image(cls):
-        return './static/images/lemon-2409365_1280.jpg'
+        return './static/images/cooking.png'
 
     def serialize(self):
         """ Serialize User instance for JSON """
@@ -70,7 +70,7 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User: {self.username}>'
-   
+
 class UserRecipe(db.Model):
     """ Many to many Users to Recipes """
 
@@ -147,7 +147,7 @@ class Step(db.Model):
         }
 
 class Ingredient(db.Model):
-    """ Ingredient. """
+    """ Ingredient """
 
     __tablename__ = "ingredients"
 
@@ -191,14 +191,3 @@ class ListIngredient(db.Model):
 
     list_id = db.Column(db.Integer, primary_key=True)
     ingredient_id = db.Column(db.Integer, db.ForeignKey("ingredients.id", ondelete="CASCADE"), primary_key=True)
-
-# class GroceryList(db.Model):
-#     """ Grocery List for the ingredients required. """
-
-#     __tablename__ = "grocerylist"
-
-#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-#     title = db.Column(db.String(50), nullable=False)
-#     date_created = db.Column(db.DateTime, nullable=False)
-#     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-#     ingredients = db.relationship('Ingredient', secondary="list_ingredients", backref="grocerylist")

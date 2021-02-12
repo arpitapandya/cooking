@@ -34,9 +34,9 @@ function generateRecipeCardHTML(recipe, data, favorites) {
     let favoriteButton;
 
     if (favorites.includes(recipe.id)) {
-        favoriteButton = `<button id="${recipe.id}" data-id="${recipe.id}" class= 'btn btn-lg'><sapn><i class="fas fa-heart-o"></i></span></button>`;
+        favoriteButton = `<button id="${recipe.id}" data-id="${recipe.id}" class='btn btn-sm'><sapn><i class="fas fa-heart"></i></span></button>`;
     } else {
-        favoriteButton = `<button id="${recipe.id}" data-id="${recipe.id}" class='btn btn-lg'><span><i class="fas fa-heart-o"></i></span></button>`;
+        favoriteButton = `<button id="${recipe.id}" data-id="${recipe.id}" class='btn btn-sm'><span><i class="far fa-heart"></i></span></button>`;
     }
 
     return `<div class="card border mb-4 mx-auto p-2 rounded text-center">
@@ -67,39 +67,9 @@ function makeTotalResults(data) {
 	return $newTotal;
 }
 
-function generateRecipeCardHTML(recipe, data, favorites) {
-	let favButton;
-
-	if (favorites.includes(recipe.id)) {
-		favButton = `<button id="${recipe.id}" data-id="${recipe.id}" class='btn btn-sm'><span><i  class="fas fa-heart"></i></span></button>`;
-	} else {
-		favButton = `<button id="${recipe.id}" data-id="${recipe.id}" class='btn btn-sm'><span><i class="far fa-heart"></i></span></button>`;
-	}
-
-	return `<div class="card border mb-4 mx-auto p-2 rounded text-center">
-	<a href="/recipes/${recipe.id}" class="card-link">
-	<img src="${data.baseUri}${recipe.image}" class="card-img-top img-fluid" alt="Photo of ${recipe.title}">
-	<div class="card-body py-2">
-	  <h5 class="card-title d-inline">${recipe.title}</h5>
-	  <form id="favorite-form" class="favorite-form d-inline">
-		${favButton}
-	  </form>
-	  <p class="lead mb-0">Ready In: ${recipe.readyInMinutes} minutes</p>
-	  <p class="lead">Servings: ${recipe.servings}</p>
-	  <a class="small text-muted" href="${recipe.sourceUrl}">View original</a>
-	  <br>
-	  </a>
-	</div>
-</div>`;
-}
 function makeH1(text = 'Recipe') {
 	let $newH1 = $('<h1>').text(text).addClass('display-2 text-center');
 	return $newH1;
-}
-
-function makeTotalResults(data) {
-	let $newTotal = $('<p>').text(`${data.totalResults} total results`).addClass('small text-center text-dark');
-	return $newTotal;
 }
 
 function makeHr() {
@@ -165,7 +135,6 @@ function confirmRemove() {
 		.attr('data-placement', 'right')
 		.attr('title', 'Remove from list')
 		.tooltip()
-		.on('click', removeIngredientFromGroceryList)
 		.tooltip('hide');
 }
 

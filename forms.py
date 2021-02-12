@@ -19,8 +19,3 @@ class LoginForm(FlaskForm):
 
     username = StringField("Username", validators=[InputRequired(message="Username Required")])
     password = PasswordField("Password", validators=[InputRequired(message="Password Required")])
-
-class GroceryListForm(FlaskForm):
-    """ Grocery list form. """
-
-    title = StringField("List Title", validators=[InputRequired(message="Add Title")])

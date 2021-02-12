@@ -7,8 +7,8 @@ from secrets import api_key
 CURRENT_USER_KEY = "user_id"
 API_BASE_URL = "https://api.spoonacular.com"
 
-valid_diets = ['vegan', 'vegetarian']
-valid_cuisines = ['indian', 'chinese', 'spanish', 'african', 'southern', 'mexican', 'korean', 'japanese', 'american', 'german']
+valid_diets = ['vegan', 'vegetarian', 'lacto vegetarian']
+valid_cuisines = ['indian', 'chinese', 'spanish', 'african', 'southern', 'mexican', 'korean', 'japanese', 'american', 'german', 'greek', 'thai', 'italian']
 
 def do_login(user):
     """User Login"""

@@ -9,13 +9,13 @@
 
 {% if g.user.recipes %}
   
-  <!--Recipe card Column-->
+  <!--Recipe card -->
 <div class="d-flex flex-wrap justify-content-around" id="recipe-container">
 
 {% for recipe in g.user.recipes %}
 
   <div class="card border mb-4 mx-auto p-2 rounded text-center">
-    <a href="{{ url_for('view_recipes_details', id=recipe.id) }} class="card-link">
+    <a href="{{ url_for('view_recipe_details', id=recipe.id) }} class="card-link">
     <img src="{{recipe.image}}" class="card-img-top img-fluid" alt="Photo of {{recipe.title}}">
   
   <div class="card-body py-2">
@@ -23,9 +23,9 @@
 
     <form id="favorite-form" class="favorite-form d-inline">
         {% if recipe.id in id_list %}
-        <button data-id="{{ recipe.id }}" class='btn btn-lg'><span><i class="fas fa-heart"></i></span></button>
+        <button data-id="{{ recipe.id }}" class='btn btn-sm'><span><i class="fas fa-heart"></i></span></button>
         {% else %}
-        <button data-id="{{ recipe.id }}" class='btn btn-lg'><span><i class="fas fa-heart"></i></span></button>
+        <button data-id="{{ recipe.id }}" class='btn btn-sm'><span><i class="far fa-heart"></i></span></button>
         {% endif %}
     </form>
 

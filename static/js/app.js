@@ -1,13 +1,10 @@
-let diets = ['vegetarian', 'vegan']
-let cuisines = ['indian', 'chinese', 'japanese', 'mexican', 'spanish', 'american', 'german', 'italian', 'french'];
+let diets = ['vegetarian', 'vegan', 'lacto vegetarian']
+let cuisines = ['indian', 'chinese', 'spanish', 'african', 'southern', 'mexican', 'korean', 'japanese', 'american', 'german', 'greek', 'thai', 'italian']
+
 const sentinel = document.querySelector('#sentinel');
-// Event-Listeners
 
-$('.favorite-form').on('click', '.fa-heart', handleFavorite);
-$('#search-form').on('submit', handleSearch);
-$('#show-add-ingredient').on('click', showAddIngredient);
-if (sentinel !== null) intersectionObserver.observe(sentinel);
 
+let offset;
 const intersectionObserver = new IntersectionObserver((entries) => {
 	if (entries[0].intersectionRatio <= 0) {
 		return;
@@ -15,13 +12,24 @@ const intersectionObserver = new IntersectionObserver((entries) => {
 	loadItems();
 });
 
+
+
+// Event-Listeners
+$('.favorite-form').on('click', '.fa-heart', handleFavorite);
+$('#search-form').on('submit', handleSearch);
+// $('.remove').on('click', confirmRemove);
+// $('#update').on('click', showUpdateForm);
+// $('#show-add-ingredient').on('click', showAddIngredient);
+if (sentinel !== null) intersectionObserver.observe(sentinel);
+
+
 $(document).ready(function() {
     // message falsh fad in fad out
     $('#flash').hide().delay(300).fadeIn(500).delay(3000).fadeOut(800);
 
     // Reset offset to 0
     offset = 0;
-    if ($('#recipe-container').length) offset = 12
+    if ($('#recipe-container').length) offset = 12;
 });
 
 	//handleSearch
@@ -77,7 +85,7 @@ async function loadItems() {
 
 		$('.favorite-form').on('click', '.fa-heart', handleFavorite);
 		offset += 12;
-	 }
+	}
 }
 
 async function handleAddIngredient(evt) {

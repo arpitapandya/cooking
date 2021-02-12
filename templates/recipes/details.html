@@ -22,9 +22,9 @@
                 <small class="small"><a href="{{ recipe.sourceUrl }}" class="text-muted mx-auto" target="_blank">Origin from {{ recipe.sourceName }}</a></small>
                 <form id="favorite-form" class="favorite-form d-inline">
                     {% if recipe in g.user.recipes %}
-                    <button data-id="{{ recipe.id }}" class="btn btn-lg"><span><i class="fas fa-heart"></i></span></button>
+                    <button data-id="{{ recipe.id }}" class="btn btn-sm"><span><i class="fas fa-heart"></i></span></button>
                     {% else %}
-                    <button data-id="{{ recipe.id }}" class="btn btn-lg"><span><i class="fas fa-heart"></i></span></button>
+                    <button data-id="{{ recipe.id }}" class="btn btn-sm"><span><i class="far fa-heart"></i></span></button>
                     {% endif %}
                 </form>
             </span>
@@ -92,7 +92,7 @@
         <button id='add-ingredients' data-id="{{ recipe.id }}" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Add to Shopping List</button>
 
             {% elif recipe.extendedIngredients %}
-               
+
             {% for ingredient in recipe.extendedIngredients %}
             <p class="ingredient" data-id="{{ ingredient.id }}">{{ ingredient.originalString }}</p>
             {% endfor %}
