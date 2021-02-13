@@ -1,8 +1,8 @@
-# Data
+###### Data
 
-This website is built using (https://spoonacular.com/food-api/)
+This website is built using [Spoonacular Api](https://spoonacular.com/food-api/)
 
-## Technologies
+###### Technologies
 
 This application uses with **Python** and **Flask** for server-side.
 

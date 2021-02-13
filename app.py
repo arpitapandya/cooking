@@ -188,42 +188,6 @@ def update_user(id):
     except Exception as e:
         return jsonify(errors=str(e))
 
-# @app.route('/users/<int:id>', methods=['PATCH'])
-# def update_user(id):
-#   """Update user"""
-#   if not g.user:
-#     return abort(401)
-#   if request.json['id'] != id:
-#     return jsonify(errors="Permission Required!")
-#   try:
-#     user = User.query.get_or_404(id)
-#     new_email = request.json.get('email', user.email)
-#     new_img_url = request.json.get('imgUrl', user.img_url)
-#     if new_email:
-#       user.email = new_email
-#     if new_img_url:
-#       user.img_url = new_img_url
-    
-#     db.session.commit()
-
-#     response_json = jsonify(user=user.serialize(), message="User updated!")
-#     return (response_json, 200)
-#   except Exception as e:
-#     return jsonify(errors=str(e))
-
-### Recipe Routes###
-
-# @app.route('/favorites/')
-# def view_saved_recipes():
-#   """View favorited recipes"""
-#   if not g.user:
-#     flash('You must log in first', 'warning')
-#     return redirect(url_for('login'))
-    
-#   id_list = [recipe.id for recipe in g.user.recipes]
-
-#   return render_template('users/favorites.html', id_list=id_list)
-
 @ app.route('/favorites/')
 def view_saved_recipes():
     """ Route to view saved recipes """
@@ -274,22 +238,6 @@ def remove_favorite(id):
   except Exception as e:
     print(str(e))
     return jsonify(errors=str(e))
-
-# @app.route('/recipes/<int:id>')
-# def view_recipe_details(id):
-#   """View info of recipe"""
-#   if not g.user:
-#     flash("You must log in first!", 'warning')
-#     return redirect(url_for('login'))
-
-#   recipe = Recipe.query.filter_by(id=id).first()
-#   if not recipe:
-#     response = get_recipe(id)
-#     data = response.json()
-#     recipe = add_recipe_to_db(data)
-#     return render_template('recipes/details.html', recipe=recipe)
-#   else:
-#     return render_template('recipes/details.html', recipe=recipe)
 
 @ app.route('/recipes/<int:id>')
 def view_recipe_details(id):
