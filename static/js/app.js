@@ -17,6 +17,7 @@ const intersectionObserver = new IntersectionObserver((entries) => {
 // Event-Listeners
 $('.favorite-form').on('click', '.fa-heart', handleFavorite);
 $('#search-form').on('submit', handleSearch);
+$('#send-email').on('click', sendEmail);
 // $('.remove').on('click', confirmRemove);
 // $('#update').on('click', showUpdateForm);
 // $('#show-add-ingredient').on('click', showAddIngredient);
@@ -52,6 +53,17 @@ async function handleSearch(evt) {
 		if (!$('#sentinel').length) addSentinel();
 		offset += 12;
 	}, 800);
+}
+
+async function sendEmail() {
+	const id = $(this).data('id');
+	response = await axios.get(`/email/${id}`);
+
+	if (response.data.errors) {
+		displayErrorAlert(response);
+	} else {
+		displaySuccessAlert(response);
+	}
 }
 
 async function handleFavorite(evt) {

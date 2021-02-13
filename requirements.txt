@@ -1,7 +1,9 @@
 astroid==2.4.2
 backcall==0.2.0
+bcrypt==3.2.0
 blinker==1.4
 certifi==2020.12.5
+cffi==1.14.4
 chardet==4.0.0
 click==7.1.2
 colorama==0.4.4
@@ -22,6 +24,7 @@ parso==0.8.1
 pickleshare==0.7.5
 prompt-toolkit==3.0.10
 psycopg2-binary==2.8.6
+pycparser==2.20
 Pygments==2.7.4
 pylint==2.6.0
 six==1.15.0

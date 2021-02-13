@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
   <!-- Required meta tags -->
@@ -6,26 +6,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta property="og:image" content="https://images.unsplash.com/photo-1552590635-e94502090862?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MjU5fHxtZWFsfGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" />
   <meta name="description" content="Let's cook something new!">
-  
+    <title>{%block title %}Cookingclub{% endblock %}</title>
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+ 
   <link rel="stylesheet" href="/static/styles/style.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 
 
-  <title>{%block title %}Cookingclub{% endblock %}</title>
-  
 
+  
   </head>
 
   <body class="bg-secondary">
 
     <!--Navbar-->
     <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-            <a class="navbar-brand" href="{{ url_for('home_page') }}">CookingClub</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-          </button>
+      <a class="navbar-brand" href="{{ url_for('home_page') }}">CookingClub</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
     <div class="collapse navbar-collapse align-items-top" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto align-items-center">
@@ -34,10 +35,13 @@
         <li class="nav-item">
           <a class="nav-link btn btn-lg" href="{{ url_for('view_saved_recipes') }}">Recipes</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link btn btn-sm btn-outline-warning badge text-dark" href="{{ url_for('logout') }}">Logout</a>
+        </li>
       </ul>
     
     <!--Diet & cuisine search form-->
-  <form data-id="{{ g.user.id }}" class="form-inline my-2 justify-content-right flex-nowrap mx-auto" id="search-form">
+    <form data-id="{{ g.user.id }}" class="form-inline my-2 justify-content-right flex-nowrap mx-auto" id="search-form">
     <div class="input-group">
           <select class="custom-select mr-1 p-1 rounded" aria-haspopup="true" id="diet">
             <option value="" selected> <span class="text-muted">Diets</span></option>
@@ -45,7 +49,7 @@
             <option value="{{diet}}">{{ diet.capitalize() }}</option>
             {% endfor %}
           </select>
-  </div>
+    </div>
     <!--cuisine-->
     <div class="input-group" id="cuisine-container">  
         <select class="custom-select mr-1 p-1 rounded" aria-haspopup="true" id="cuisine" data-container="body">
@@ -60,28 +64,25 @@
         placeholder="Recipe Search" aria-label="Search">
     <button data-id="{{ g.user.id }}" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
-</div>
     
     <!-- User Signup/login -->
 
-     <a class="avatar-link px-2 ml-auto avatar" id="profile-link" href="{{ url_for('view_user', id=g.user.id) }}"
-        style="background-image:url('{{g.user.img_url}}')"> </a>
 
     {% else %}
-        <div class="nav-item mx-2">
+        <li class="nav-item mx-2">
           <button class="btn btn-outline-info my-1 py-0">
             <a class="nav-link" href="{{ url_for('signup') }}">SignUp</a>
           </button>
-        </div>
-        <div class="nav-item mx-2">
+        </li>
+        <li class="nav-item mx-2">
           <button class="btn btn-outline-info my-1 py-0">
             <a class="nav-link" href="{{ url_for('login') }}">LogIn</a>
           </button>
-        </div>
+        </li>
         {% endif %}
       </div>
     </nav>
-
+  
   <main class="container-fluid">
     {% block content %}
     {% endblock %}

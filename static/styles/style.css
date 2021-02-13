@@ -89,6 +89,16 @@ footer {
     color: darksalmon;
 }
 
+
+#profile-link {
+	width: 70px;
+    height: 70px;
+    background-position: top;
+    background-repeat: no-repeat;
+	background-size: cover;
+	border-radius: 50px;
+}
+
 .jumbotron {
     width : 70vw;
     margin: 3% auto;

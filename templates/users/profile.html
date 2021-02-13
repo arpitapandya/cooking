@@ -2,9 +2,10 @@
 
 {% block title %}{{ g.user.username }}{% endblock %}
 
-{% block content %}
 
-<h1 class="display-4 text-center">User Profile</h1>
+{% block content %} 
+
+<h1 class="display-3 text-center">User Profile</h1>
 
 <div class="container-fluid mt-5">
     <div class="row">
@@ -12,21 +13,19 @@
         <div class="col-6 text-left mr-auto">
             <h2 class="h2">{{g.user.username}}</h2>
             <div class="">
-        <!--button-->
-            <button data-id="{{ g.user.id }}" id="update" class="btn btn-outline-primary badge my-2">Update User Profile</button>
-        <!--Logout-->
-            <a class="nav-link btn btn-sm btn-outline-warning badge text-dark" href="{{ url_for('logout') }}">Logout</a>
-        </div>
-            <!-- User Information-->
-        <ul class="list-group">
-            <li class="list-group-item d-flex justify-content-between align-items-center profile-li">
-                <p class="mb-0 profile-info">Email: </p><span id="user-email" class="badge badge-primary badge-pill">{{ g.user.email }}</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center profile-li">
-                <a class="profile-info" href="{{ url_for('view_saved_recipes', id=g.user.id)}}">Recipes favorited:</a> <span class="badge badge-primary badge-pill">{{ g.user.recipes|length}}</span>
-            </li>
-        </ul>
+            <!-- UPDATE BUTTON -->
+                <button data-id="{{ g.user.id }}" id="update" class="btn btn-outline-primary badge my-2">Update Profile</button>
+            <!-- LOGOUT BUTTON -->
+                <a class="nav-link btn btn-sm btn-outline-warning badge text-dark" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+            <!-- USER INFO -->
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center profile-li">
+                   <p class="mb-0 profile-info">Email: </p><span id="user-email" class="badge badge-primary badge-pill">{{ g.user.email }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center profile-li">
+                    <a class="profile-info" href="{{ url_for('view_saved_recipes', id=g.user.id) }}">Recipes Saved:</a> <span class="badge badge-primary badge-pill">{{ g.user.recipes|length }}</span>
+                </li>
+            </ul>
+        </div>        
     </div>
-</div>
-</div>
-{% endblock %}

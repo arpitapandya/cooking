@@ -100,13 +100,14 @@ def login():
 
   return render_template('users/login.html', form=form)
 
-@app.route('/logout')
-def logout():
-  """Handle logout user."""
 
-  do_logout()
-  flash("You have sucessfully logged out.", 'success')
-  return redirect(url_for('home_page'))
+@ app.route('/logout')
+def logout():
+    """Handle logout of user."""
+
+    do_logout()
+    flash('You have been logged out', 'success')
+    return redirect(url_for('home_page'))
 
 
 ####Search Routes####
@@ -156,48 +157,84 @@ def search_recipes():
 @app.route('/users/<int:id>')
 def view_user(id):
   """ Display user """
-
   if not g.user:
     flash('You must log in first', 'warning')
     return redirect(url_for('login'))
 
   return render_template('users/profile.html')
 
-@app.route('/users/<int:id>', methods=['PATCH'])
+@ app.route('/users/<int:id>', methods=['PATCH'])
 def update_user(id):
-  """Update user"""
-  if not g.user:
-    return abort(401)
-  if request.json['id'] != id:
-    return jsonify(errors="Permission Required!")
-  try:
-    user = User.query.get_or_404(id)
-    new_email = request.json.get('email', user.email)
-    new_img_url = request.json.get('imgUrl', user.img_url)
-    if new_email:
-      user.email = new_email
-    if new_img_url:
-      user.img_url = new_img_url
-    
-    db.session.commit()
+    """ Update user info """
+    if not g.user:
+        return abort(401)
+    if request.json['id'] != id:
+        return jsonify(errors="You don't have permission to do that!")
 
-    response_json = jsonify(user=user.serialize(), message="User updated!")
-    return (response_json, 200)
-  except Exception as e:
-    return jsonify(errors=str(e))
+    try:
+        user = User.query.get_or_404(id)
+        new_email = request.json.get('email', user.email)
+        new_img_url = request.json.get('imgUrl', user.img_url)
+        if new_email:
+            user.email = new_email
+        if new_img_url:
+            user.img_url = new_img_url
+
+        db.session.commit()
+
+        response_json = jsonify(user=user.serialize(),
+                                message="Update successful!")
+        return (response_json, 200)
+    except Exception as e:
+        return jsonify(errors=str(e))
+
+# @app.route('/users/<int:id>', methods=['PATCH'])
+# def update_user(id):
+#   """Update user"""
+#   if not g.user:
+#     return abort(401)
+#   if request.json['id'] != id:
+#     return jsonify(errors="Permission Required!")
+#   try:
+#     user = User.query.get_or_404(id)
+#     new_email = request.json.get('email', user.email)
+#     new_img_url = request.json.get('imgUrl', user.img_url)
+#     if new_email:
+#       user.email = new_email
+#     if new_img_url:
+#       user.img_url = new_img_url
+    
+#     db.session.commit()
+
+#     response_json = jsonify(user=user.serialize(), message="User updated!")
+#     return (response_json, 200)
+#   except Exception as e:
+#     return jsonify(errors=str(e))
 
 ### Recipe Routes###
 
-@app.route('/favorites/')
-def view_saved_recipes():
-  """View favorited recipes"""
-  if not g.user:
-    flash('You must log in first', 'warning')
-    return redirect(url_for('login'))
+# @app.route('/favorites/')
+# def view_saved_recipes():
+#   """View favorited recipes"""
+#   if not g.user:
+#     flash('You must log in first', 'warning')
+#     return redirect(url_for('login'))
     
-  id_list = [recipe.id for recipe in g.user.recipes]
+#   id_list = [recipe.id for recipe in g.user.recipes]
 
-  return render_template('users/favorites.html', id_list=id_list)
+#   return render_template('users/favorites.html', id_list=id_list)
+
+@ app.route('/favorites/')
+def view_saved_recipes():
+    """ Route to view saved recipes """
+    if not g.user:
+        flash('You must be logged in to do that', 'warning')
+        return redirect(url_for('login'))
+
+    id_list = [recipe.id for recipe in g.user.recipes]
+
+    return render_template('users/favorites.html', id_list=id_list)
+
 
 @app.route('/favorites/<int:id>', methods=['POST'])
 def add_favorite(id):
@@ -238,21 +275,37 @@ def remove_favorite(id):
     print(str(e))
     return jsonify(errors=str(e))
 
-@app.route('/recipes/<int:id>')
-def view_recipe_details(id):
-  """View info of recipe"""
-  if not g.user:
-    flash("You must log in first!", 'warning')
-    return redirect(url_for('login'))
+# @app.route('/recipes/<int:id>')
+# def view_recipe_details(id):
+#   """View info of recipe"""
+#   if not g.user:
+#     flash("You must log in first!", 'warning')
+#     return redirect(url_for('login'))
 
-  recipe = Recipe.query.filter_by(id=id).first()
-  if not recipe:
-    response = get_recipe(id)
-    data = response.json()
-    recipe = add_recipe_to_db(data)
-    return render_template('recipes/details.html', recipe=recipe)
-  else:
-    return render_template('recipes/details.html', recipe=recipe)
+#   recipe = Recipe.query.filter_by(id=id).first()
+#   if not recipe:
+#     response = get_recipe(id)
+#     data = response.json()
+#     recipe = add_recipe_to_db(data)
+#     return render_template('recipes/details.html', recipe=recipe)
+#   else:
+#     return render_template('recipes/details.html', recipe=recipe)
+
+@ app.route('/recipes/<int:id>')
+def view_recipe_details(id):
+    """ View recipe in detail """
+    if not g.user:
+        flash('You must be logged in to do that', 'warning')
+        return redirect(url_for('login'))
+
+    recipe = Recipe.query.filter_by(id=id).first()
+    if not recipe:
+        response = get_recipe(id)
+        data = response.json()
+        recipe = add_recipe_to_db(data)
+        return render_template('recipes/details.html', recipe=recipe)
+    else:
+        return render_template('recipes/details.html', recipe=recipe)
 
 @app.errorhandler(404)
 def page_not_found(error):
