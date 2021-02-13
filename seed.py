@@ -5,6 +5,12 @@ from app import app
 db.drop_all()
 db.create_all()
 
+# Empty all tables
+User.query.delete()
+Recipe.query.delete()
+Measurement.query.delete()
+Ingredient.query.delete()
+
 # Add Users
 kelly = User(username="kelly", email="test@test.in", password="pass123")
 kim = User(username="kim", email="test@test.in", password="password123")
