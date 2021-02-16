@@ -14,7 +14,7 @@ Ingredient.query.delete()
 # Add Users
 kelly = User(username="kelly", email="test@test.in", password="pass123")
 kim = User(username="kim", email="test@test.in", password="password123")
-ken = User(username="ken", emai="test@test.in", password="password123")
+ken = User(username="ken", email="test@test.in", password="password123")
 
 # Add new Users
 db.session.add(kelly)

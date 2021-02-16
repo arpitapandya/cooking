@@ -2,7 +2,7 @@ from models import User, db, Recipe, Step, Ingredient, Measurement
 from flask import request, session
 import os
 import requests
-# from secrets import api_key
+from secrets import api_key
 
 CURRENT_USER_KEY = "user_id"
 API_BASE_URL = "https://api.spoonacular.com"

@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from forms import SignUpForm, LoginForm
 from flask_debugtoolbar import DebugToolbarExtension
 from helpers import add_user_data, create_login_data, generate_headers, generate_search_params, add_and_commit, do_search, get_recipe, do_login, do_logout, add_ingredients_to_db, add_recipe_to_db, add_measurement_for_ingredient, API_BASE_URL, valid_cuisines, valid_diets
-# from secrets import api_key
+from secrets import api_key
 import requests
 import os
 
@@ -28,7 +28,7 @@ CURRENT_USER_KEY = "user_id"
 API_BASE_URL = "https://api.spoonacular.com"
 # API_BASE_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
 
-# API_KEY = api_key
+API_KEY = api_key
 
 
 
