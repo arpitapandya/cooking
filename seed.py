@@ -1,4 +1,4 @@
-from models import db, connect_db, User, UserRecipe, Recipe, Step, Ingredient, Measurement, ListIngredient, GroceryList
+from models import db, connect_db, User, UserRecipe, Recipe, Step, Ingredient, Measurement, ListIngredient
 from app import app
 
 # Create all tables
