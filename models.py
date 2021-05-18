@@ -20,7 +20,7 @@ class User(db.Model):
     username = db.Column(db.String(50), nullable=False, unique=True)
     email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.Text, nullable=False)
-    img_url = db.Column(db.String, default='/static/images/cooking.png')
+    img_url = db.Column(db.String, default='/static/images/cupcake-png.png')
     is_admin = db.Column(db.Boolean, default=False)
     recipes = db.relationship('Recipe', secondary="users_recipes", backref='users')
     # grocery_list = db.relationship('GroceryList', backref='user')
@@ -56,7 +56,7 @@ class User(db.Model):
 
     @classmethod
     def default_image(cls):
-        return './static/images/cooking.png'
+        return './static/images/cupcake-png.png'
 
     def serialize(self):
         """ Serialize User instance for JSON """

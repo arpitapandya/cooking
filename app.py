@@ -83,7 +83,7 @@ def signup():
 
 ### User Login###
 
-@app.route('/login', methods=["GET", "POST"])
+@ app.route('/login', methods=["GET", "POST"])
 def login():
   """ Handle user login."""
 
@@ -122,7 +122,7 @@ def home_page():
   return render_template('home.html')
 
 
-@app.route('/load')
+@ app.route('/load')
 def load():
   """Load more results after the end of the page"""
   if request.args:
@@ -137,7 +137,7 @@ def load():
     response_json = jsonify(data=data, favorites=favorites)
   return (response_json, 200)
 
-@app.route('/search')
+@ app.route('/search')
 def search_recipes():
   """ Recipe Serach. """
   if not g.user:
@@ -157,7 +157,7 @@ def search_recipes():
 
 #### User Routes####
 
-@app.route('/users/<int:id>')
+@ app.route('/users/<int:id>')
 def view_user(id):
   """ Display user """
   if not g.user:
@@ -242,7 +242,7 @@ def remove_favorite(id):
     print(str(e))
     return jsonify(errors=str(e))
 
-@ app.route('/recipes/<int:id>')
+@app.route('/recipes/<int:id>')
 def view_recipe_details(id):
     """ View recipe in detail """
     if not g.user:

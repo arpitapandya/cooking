@@ -10,13 +10,9 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
- 
+
   <link rel="stylesheet" href="/static/styles/style.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-
-
-
-  
   </head>
 
   <body class="bg-secondary">
@@ -32,13 +28,10 @@
       <ul class="navbar-nav mr-auto align-items-center">
       
       {% if g.user %}
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link btn btn-lg" href="{{ url_for('view_saved_recipes') }}">Recipes</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link btn btn-lg btn-outline-warning badge text-dark" href="{{ url_for('logout') }}">Logout</a>
-        </li>
-      </ul>
+        </li> -->
+        
     
     <!--Diet & cuisine search form-->
     <form data-id="{{ g.user.id }}" class="form-inline my-2 justify-content-right flex-nowrap mx-auto" id="search-form">
@@ -57,7 +50,7 @@
           {% for cuisine in cuisines %}
           <option value="{{cuisine}}">{{ cuisine.capitalize() }}</option>
           {% endfor %}
-         </select>
+        </select>
     </div>
 
     <input data-id="{{ g.user.id }}" class="form-control mr-sm-2 rounded" type="search" id="search-value"
@@ -65,9 +58,19 @@
     <button data-id="{{ g.user.id }}" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
     
+
+    <!-- <li class="nav-item">
+      <button class="nav-link btn btn-md btn-outline-warning badge text-dark" href="{{ url_for('logout') }}">Logout</button>
+    </li> -->
+
+    <!-- User Profile -->
+
+    <!-- <a class="avatar-link px-2 ml-auto avatar" id="profile-link" href="{{ url_for('view_user', id=g.user.id) }}"
+        style="background-image:url('{{g.user.img_url}}')"> </a> -->
+        <a class="avatar-link px-2 ml-auto avatar" id="profile-link" href="{{ url_for('view_user', id=g.user.id) }}">
+        <img src="{{ g.user.img_url }}" alt="Profile" class="avatar">
+          </a>
     <!-- User Signup/login -->
-
-
     {% else %}
         <li class="nav-item mx-2">
           <button class="btn btn-outline-info my-1 py-0">

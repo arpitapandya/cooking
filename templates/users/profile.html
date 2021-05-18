@@ -21,7 +21,7 @@
             <!-- USER INFO -->
             <ul class="list-group">
                 <li class="list-group-item d-flex justify-content-between align-items-center profile-li">
-                   <p class="mb-0 profile-info">Email: </p><span id="user-email" class="badge badge-primary badge-pill">{{ g.user.email }}</span>
+                <p class="mb-0 profile-info">Email: </p><span id="user-email" class="badge badge-primary badge-pill">{{ g.user.email }}</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center profile-li">
                     <a class="profile-info" href="{{ url_for('view_saved_recipes', id=g.user.id) }}">Recipes Saved:</a> <span class="badge badge-primary badge-pill">{{ g.user.recipes|length }}</span>
@@ -29,3 +29,5 @@
             </ul>
         </div>        
     </div>
+</div>
+{% endblock %}
